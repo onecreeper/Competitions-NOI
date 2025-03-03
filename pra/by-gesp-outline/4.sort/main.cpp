@@ -116,6 +116,18 @@ void quickSort(vector<int>& target) {
     quickS(target, 0, target.size() - 1);
 }
 
+void merge(){
+
+}
+
+void mergeS(){
+
+}
+
+void mergeSort(vector<int>& target){
+
+}
+
 int main (){
     vector<int> myVector = {1,4,6,8,9,6,5,3,1};
 
