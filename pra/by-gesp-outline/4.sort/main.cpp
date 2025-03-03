@@ -85,8 +85,35 @@ void insertSort(vector<int>& target) {
     }
 }
 
-void quickSort(vector<int>& target){
-    //快速排序
+
+int quickP(vector<int>& target, int left, int right) {
+    int pivotValue = target[left];
+    int i = left, j = right;
+    
+    while(i < j) {
+        while(target[j] >= pivotValue && i < j) {
+            --j;
+        }
+        while(target[i] <= pivotValue && i < j) {
+            ++i;
+        }
+        if(i < j) {
+            swap(target[i], target[j]);
+        }
+    }
+    swap(target[i], target[left]);
+    return i;
+}
+
+void quickS(vector<int>& target, int left, int right) {
+    if (left >= right) return;
+    int base = quickP(target, left, right);
+    quickS(target, left, base - 1);
+    quickS(target, base + 1, right);
+}
+
+void quickSort(vector<int>& target) {
+    quickS(target, 0, target.size() - 1);
 }
 
 int main (){
@@ -96,7 +123,7 @@ int main (){
     for (int i : myVector) cout << i;
     cout << endl;
 
-    insertSort(myVector); // 调用冒泡排序函数，传入 vector 的引用
+    quickSort(myVector); // 调用冒泡排序函数，传入 vector 的引用
 
     cout << "排序后: ";
     for (int i : myVector) cout << i;
