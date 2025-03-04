@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <functional>
 
 using namespace std;
 
@@ -116,30 +117,69 @@ void quickSort(vector<int>& target) {
     quickS(target, 0, target.size() - 1);
 }
 
-void merge(){
-
+int quickP2(vector<int>& target, int left, int right) {
+    int pivot_value = target[left];
+    int i = left, j = right;
+    
+    while (i < j) {
+        // 找到一个小于pivot的值
+        while (i < j && target[j] >= pivot_value) --j;
+        // 找到一个大于pivot的值
+        while (i < j && target[i] <= pivot_value) ++i;
+        // 如果i < j，交换i和j位置的元素
+        if (i < j) swap(target[i], target[j]);
+    }
+    
+    // 最后，将pivot放到正确的位置上
+    swap(target[left], target[i]);
+    return i;
 }
 
-void mergeS(){
-
+void quickS2(vector<int>& target, int left, int right) {
+    if (left < right) {
+        int base = quickP2(target, left, right);
+        quickS2(target, left, base - 1);
+        quickS2(target, base + 1, right);
+    }
 }
 
-void mergeSort(vector<int>& target){
-
+void quickSort2(vector<int>& target) {
+    if (target.size() <= 1) return;
+    quickS2(target, 0, target.size() - 1);
 }
 
-int main (){
-    vector<int> myVector = {1,4,6,8,9,6,5,3,1};
 
-    cout << "排序前: ";
-    for (int i : myVector) cout << i;
-    cout << endl;
+void testSortingFunction(function<void(vector<int>&)> sortFunc) {
+    vector<vector<int>> testCases = {
+        {1, 4, 6, 8, 9, 6, 5, 3, 1}, // 常规案例
+        {},                          // 边界案例：空数组
+        {1},                         // 边界案例：单元素
+        {5, 4, 3, 2, 1},             // 边界案例：逆序
+        {1, 2, 3, 4, 5},             // 已经有序的数组
+        {3, 3, 3, 3, 3},             // 全部相同的元素
+        {1, 2, 2, 1, 3, 3, 3, 1}     // 重复元素
+    };
 
-    quickSort(myVector); // 调用冒泡排序函数，传入 vector 的引用
+    for (auto& testCase : testCases) {
+        vector<int> original = testCase;
+        sortFunc(testCase);
+        
+        // 打印测试用例结果
+        cout << "原始数组: ";
+        for (int i : original) cout << i << " ";
+        cout << " => 排序后: ";
+        for (int i : testCase) cout << i << " ";
+        
+        // 检查排序是否正确
+        if (is_sorted(testCase.begin(), testCase.end())) {
+            cout << "PASSED" << endl;
+        } else {
+            cout << "FAILED" << endl;
+        }
+    }
+}
 
-    cout << "排序后: ";
-    for (int i : myVector) cout << i;
-    cout << endl;
-
+int main() {
+    testSortingFunction(quickSort2);
     return 0;
 }
