@@ -86,7 +86,6 @@ void insertSort(vector<int>& target) {
     }
 }
 
-
 int quickP(vector<int>& target, int left, int right) {
     int pivotValue = target[left];
     int i = left, j = right;
@@ -148,6 +147,46 @@ void quickSort2(vector<int>& target) {
     quickS2(target, 0, target.size() - 1);
 }
 
+void merge(vector<int>& target, int left, int mid, int right) {
+    int s = right - left + 1;
+    vector<int> temp(s);
+    int i = left, j = mid + 1, k = 0;
+
+    while (i <= mid && j <= right) {
+        if (target[i] <= target[j]) {
+            temp[k++] = target[i++];
+        } else {
+            temp[k++] = target[j++];
+        }
+    }
+    while (i <= mid) {
+        temp[k++] = target[i++];
+    }
+    while (j <= right) {
+        temp[k++] = target[j++];
+    }
+    for (int k = 0; k < s; ++k) {
+        target[k + left] = temp[k];
+    }
+}
+
+void mergeS(vector<int>& target, int left, int right) {
+    if (left >= right) return;
+    int mid = left + (right - left) / 2;
+    mergeS(target, left, mid);
+    mergeS(target, mid + 1, right);
+    merge(target, left, mid, right);
+}
+
+void mergeSort(vector<int>& target) {
+    if (!target.empty()) {
+        mergeS(target, 0, target.size() - 1);
+    }
+}
+
+
+
+//测试部分
 
 void testSortingFunction(function<void(vector<int>&)> sortFunc) {
     vector<vector<int>> testCases = {
@@ -159,6 +198,9 @@ void testSortingFunction(function<void(vector<int>&)> sortFunc) {
         {3, 3, 3, 3, 3},             // 全部相同的元素
         {1, 2, 2, 1, 3, 3, 3, 1}     // 重复元素
     };
+
+    int flag = true;
+    int count = 0;
 
     for (auto& testCase : testCases) {
         vector<int> original = testCase;
@@ -173,13 +215,17 @@ void testSortingFunction(function<void(vector<int>&)> sortFunc) {
         // 检查排序是否正确
         if (is_sorted(testCase.begin(), testCase.end())) {
             cout << "PASSED" << endl;
+            ++count;
         } else {
             cout << "FAILED" << endl;
+            flag = false;
         }
     }
+    if (flag = false) cout << count << "/7 " <<"未能通过测试 :("<<endl;
+    else cout << "All done ! 去完成下一个吧" << endl;
 }
 
 int main() {
-    testSortingFunction(quickSort2);
+    testSortingFunction(mergeSort);
     return 0;
 }
