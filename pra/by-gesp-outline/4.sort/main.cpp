@@ -184,6 +184,37 @@ void mergeSort(vector<int>& target) {
     }
 }
 
+void merge2(vector<int>& target, int left, int mid, int right) {
+    int s = right - left + 1;
+    vector<int> tmp(s);
+    int i = left, j = mid + 1, k = 0;
+
+    while (i <= mid && j <= right) {
+        if (target[i] <= target[j]) { // 注意排序顺序，通常是从小到大
+            tmp[k++] = target[i++];
+        } else {
+            tmp[k++] = target[j++];
+        }
+    }
+    while (i <= mid) tmp[k++] = target[i++];
+    while (j <= right) tmp[k++] = target[j++];
+    for (int k = 0; k < s; ++k) target[left + k] = tmp[k];
+}
+
+void mergeS2(vector<int>& target, int left, int right) {
+    if (left >= right) return; // 基准条件
+    int mid = left + (right - left) / 2;
+    mergeS2(target, left, mid);
+    mergeS2(target, mid + 1, right);
+    merge2(target, left, mid, right);
+}
+
+void mergeSort2(vector<int>& target) {
+    if (target.empty()) return; // 处理空数组的情况
+    mergeS2(target, 0, target.size() - 1);
+}
+
+
 
 
 //测试部分
@@ -199,8 +230,8 @@ void testSortingFunction(function<void(vector<int>&)> sortFunc) {
         {1, 2, 2, 1, 3, 3, 3, 1}     // 重复元素
     };
 
-    int flag = true;
-    int count = 0;
+    bool allPassed = true;
+    int passedCount = 0;
 
     for (auto& testCase : testCases) {
         vector<int> original = testCase;
@@ -214,18 +245,23 @@ void testSortingFunction(function<void(vector<int>&)> sortFunc) {
         
         // 检查排序是否正确
         if (is_sorted(testCase.begin(), testCase.end())) {
-            cout << "PASSED" << endl;
-            ++count;
+            cout << "\033[1;32mPASSED\033[0m" << endl; // 绿色输出
+            ++passedCount;
         } else {
-            cout << "FAILED" << endl;
-            flag = false;
+            cout << "\033[1;31mFAILED\033[0m" << endl; // 红色输出
+            allPassed = false;
         }
     }
-    if (flag = false) cout << count << "/7 " <<"未能通过测试 :("<<endl;
-    else cout << "All done ! 去完成下一个吧" << endl;
+    
+    cout << endl;
+    if (!allPassed) {
+        cout << passedCount << "/7 " << "未能通过测试 :(" << endl;
+    } else {
+        cout << "All done! 去完成下一个吧" << endl;
+    }
 }
 
 int main() {
-    testSortingFunction(mergeSort);
+    testSortingFunction(mergeSort2);
     return 0;
 }
