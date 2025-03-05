@@ -215,15 +215,16 @@ void mergeSort2(vector<int>& target) {
 }
 
 void countingSortNaive(vector<int> &target){
+
     //简单实现 ，无法实现对象排序 -- hello算法
     int max = 0;
     for(int i : target) if (i > max) max = i;
     vector<int> tmp(max + 1,0);
     for(int i : target) ++tmp[i];
     int index = 0;
-    for(int i = 0; i <= max ; ++i){
-        while(tmp[i] > 0){
-            target[index++] = 1;
+    for (int i = 0; i <= max; ++i) {
+        while (tmp[i] > 0) {
+            target[index++] = i;
             --tmp[i];
         }
     }
@@ -235,9 +236,9 @@ void countingSortNaive2(vector<int> &target){
     vector<int> tmp(max + 1,0);
     for(int i : target) ++tmp[i];
     int index = 0;
-    for(int i = 0; i <= max ; ++i){
-        while(tmp[i] > 0){
-            target[index++] = 1;
+    for (int i = 0; i <= max; ++i) {
+        while (tmp[i] > 0) {
+            target[index++] = i;
             --tmp[i];
         }
     }
