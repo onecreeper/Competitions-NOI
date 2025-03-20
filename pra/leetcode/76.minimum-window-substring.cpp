@@ -60,7 +60,7 @@ using namespace std;
 class Solution1 {
     public:
         string minWindow(string s, string t) {
-            
+
         }
     };
 
@@ -68,7 +68,7 @@ class Solution1 {
 
 int main() {
     Solution1 s;
-    string a = "hello", b = ""
+    string a = "hello", b = "";
     string res = s.minWindow();
     cout << res << endl;
 }
