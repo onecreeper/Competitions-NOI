@@ -75,17 +75,27 @@ class Solution1 { //没有脑子法
 class Solution2 { //自己想出的队列
     public:
         vector<int> maxSlidingWindow(vector<int>& nums, int k){
-            deque<int> slider;
-            int n = nums.size();
-            //init slider
-            for(int i = 0; i < k; ++k) slider.push_back(nums[i]);
-            sort(slider.front(),slider.back());
-            for(int i = 0 + k - 1; i < n; ++i){
-                
+            vector<int> result;
+            deque<int> dq;  // 存储索引，队列中的索引对应的元素单调递减
+            for (int i = 0; i < nums.size(); ++i) {
+                // 移除队列中超出窗口的索引
+                while (!dq.empty() && dq.front() <= i - k) {
+                    dq.pop_front();
+                }
+                // 维护单调递减性：从队尾移除所有比当前元素小的索引
+                while (!dq.empty() && nums[dq.back()] < nums[i]) {
+                    dq.pop_back();
+                }
+                // 将当前索引加入队列
+                dq.push_back(i);
+                // 记录最大值
+                if (i >= k - 1) {
+                    result.push_back(nums[dq.front()]);
+                }
             }
-
+            return result;
         }
-};
+    };
 
     
     
